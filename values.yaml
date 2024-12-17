@@ -1,0 +1,92 @@
+commitSha: ""
+image:
+  # image repository
+  repository: "183734604103.dkr.ecr.eu-north-1.amazonaws.com/be-java-platform-gateway-service"
+  tag: "0.0.1-SNAPSHOT"
+  imagePullPolicy: IfNotPresent
+replicas: 1
+deployment:
+  enabled: true
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 100%
+extraEnv:
+  - name: DATABASE_URL
+    valueFrom:
+      configMapKeyRef:
+        name: itm-cm
+        key: DB_URL_USER_SERVICE
+  - name: DATABASE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: itm-secret
+        key: DATABASE_USERNAME
+  - name: DATABASE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: itm-secret
+        key: DATABASE_PASSWORD
+  - name: KEYCLOAK_SECRET_GATEWAY
+    valueFrom:
+      secretKeyRef:
+        name: itm-secret
+        key: KEYCLOAK_SECRET_GATEWAY
+# Node taints to tolerate
+tolerations:
+  - effect: NoSchedule
+    key: dedicated
+    operator: Equal
+    value: apps
+# Pod resource requests and limits
+resources:
+  limits:
+    cpu: 250m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+service:
+  type: ClusterIP
+  httpPort: 9090
+  extraPorts: [ ]
+networkPolicy:
+  enabled: "true"
+ingress:
+  # If `true`, an Ingress is created
+  enabled: true
+  annotations: { }
+  # The name of the Ingress Class associated with this ingress
+  ingressClassName: "nginx-external"
+  rules:
+    - host: gateway-service-dev.it-mentor.space
+      # Paths for the host
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              port:
+                number: 9090
+  tls: [ ]
+autoscaling:
+  enabled: false
+  # Additional HorizontalPodAutoscaler labels
+  labels: { }
+  # The minimum and maximum number of replicas for the Keycloak StatefulSet
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: ""
+  behavior: { }
+    # scaleDown:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #     - type: Pods
+    #       value: 1
+  #       periodSeconds: 300

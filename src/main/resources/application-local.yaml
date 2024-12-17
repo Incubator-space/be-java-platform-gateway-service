@@ -1,0 +1,119 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000,http://backend-gateway-client:9090"
+            allowedHeaders: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PATCH
+              - PUT
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: user_service_route
+          uri: http://backend-resources:9191/user-service
+          predicates:
+            Path=/user-service/**
+          filters:
+            - RewritePath=/user-service(?<segment>/?.*), $\{segment}
+
+        - id: direction_service_route
+          uri: http://backend-resources:9292/direction-service
+          predicates:
+            Path=/direction-service/**
+          filters:
+            - RewritePath=/direction-service(?<segment>/?.*), $\{segment}
+
+        - id: review_service_route
+          uri: http://backend-resources:9393/review-service
+          predicates:
+            Path=/review-service/**
+          filters:
+            - RewritePath=/review-service(?<segment>/?.*), $\{segment}
+
+        - id: task_service_route
+          uri: http://backend-resources:9999/task-service
+          predicates:
+            Path=/task-service/**
+          filters:
+            - RewritePath=/task-service(?<segment>/?.*), $\{segment}
+
+        - id: file_service_route
+          uri: http://backend-resources:9595/file-service
+          predicates:
+            Path=/file-service/**
+          filters:
+            - RewritePath=/file-service(?<segment>/?.*), $\{segment}
+
+        - id: notification_service_route
+          uri: http://backend-resources:9494/notification-service
+          predicates:
+            Path=/notification-service/**
+          filters:
+            - RewritePath=/notification-service(?<segment>/?.*), $\{segment}
+
+        - id: achievement_service_route
+          uri: http://backend-resources:9696/achievement-service
+          predicates:
+            Path=/achievement-service/**
+          filters:
+            - RewritePath=/achievement-service(?<segment>/?.*), $\{segment}
+
+        - id: profile_service_route
+          uri: http://backend-resources:9085/profile-service
+          predicates:
+            Path=/profile-service/**
+          filters:
+            - RewritePath=/profile-service(?<segment>/?.*), $\{segment}
+
+        - id: billing_service_route
+          uri: http://backend-resources:9797/billing-service
+          predicates:
+            Path=/billing-service/**
+          filters:
+            - RewritePath=/billing-service(?<segment>/?.*), $\{segment}
+
+        - id: payrecord_service_route
+          uri: http://backend-resources:9899/payrecord-service
+          predicates:
+            Path=/payrecord-service/**
+          filters:
+            - RewritePath=/payrecord-service(?<segment>/?.*), $\{segment}
+
+        - id: chatgpt_adapter_route
+          uri: http://backend-resources:9898/chatgpt-adapter
+          predicates:
+            Path=/chatgpt-adapter/**
+          filters:
+            - RewritePath=/chatgpt-adapter(?<segment>/?.*), $\{segment}
+
+        - id: yookassa_adapter_route
+          uri: http://backend-resources:9798/yookassa-adapter
+          predicates:
+            Path=/yookassa-adapter/**
+          filters:
+            - RewritePath=/yookassa-adapter(?<segment>/?.*), $\{segment}
+
+        - id: jira_adapter_route
+          uri: http://backend-resources:9698/jira-adapter
+          predicates:
+            Path=/jira-adapter/**
+          filters:
+            - RewritePath=/jira-adapter(?<segment>/?.*), $\{segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 9090
+
+logging:
+  level:
+    root: INFO

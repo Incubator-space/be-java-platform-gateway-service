@@ -1,0 +1,119 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000,https://app.migration.it-mentor.space,http://backend-gateway-client:9090,https://api.migration.it-mentor.space"
+            allowedHeaders: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PATCH
+              - PUT
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: user_service_route
+          uri: http://be-java-platform-user-service:9191
+          predicates:
+            Path=/user-service/**
+          filters:
+            - RewritePath=/user-service(?<segment>/?.*), $\{segment}
+
+        - id: direction_service_route
+          uri: http://be-java-platform-direction-service:9292
+          predicates:
+            Path=/direction-service/**
+          filters:
+            - RewritePath=/direction-service(?<segment>/?.*), $\{segment}
+            
+        - id: review_service_route
+          uri: http://be-java-platform-review-service:9393
+          predicates:
+            Path=/review-service/**
+          filters:
+            - RewritePath=/review-service(?<segment>/?.*), $\{segment}
+
+        - id: task_service_route
+          uri: http://be-java-platform-task-service:9999
+          predicates:
+            Path=/task-service/**
+          filters:
+            - RewritePath=/task-service(?<segment>/?.*), $\{segment}
+
+        - id: file_service_route
+          uri: http://be-java-platform-file-service:9595
+          predicates:
+            Path=/file-service/**
+          filters:
+            - RewritePath=/file-service(?<segment>/?.*), $\{segment}
+
+        - id: notification_service_route
+          uri: http://be-java-platform-notification-service:9494
+          predicates:
+            Path=/notification-service/**
+          filters:
+            - RewritePath=/notification-service(?<segment>/?.*), $\{segment}
+
+        - id: achievement_service_route
+          uri: http://be-java-platform-achievement-service:9696
+          predicates:
+            Path=/achievement-service/**
+          filters:
+            - RewritePath=/achievement-service(?<segment>/?.*), $\{segment}
+
+        - id: profile_service_route
+          uri: http://be-java-platform-profile-service:9085
+          predicates:
+            Path=/profile-service/**
+          filters:
+            - RewritePath=/profile-service(?<segment>/?.*), $\{segment}
+
+        - id: billing_service_route
+          uri: http://be-java-platform-billing-service:9797
+          predicates:
+            Path=/billing-service/**
+          filters:
+            - RewritePath=/billing-service(?<segment>/?.*), $\{segment}
+
+        - id: payrecord_service_route
+          uri: http://be-java-platform-payrecord-service:9899
+          predicates:
+            Path=/payrecord-service/**
+          filters:
+            - RewritePath=/payrecord-service(?<segment>/?.*), $\{segment}
+
+        - id: chatgpt_adapter_route
+          uri: http://be-java-platform-chatgpt-adapter:9898
+          predicates:
+            Path=/chatgpt-adapter/**
+          filters:
+            - RewritePath=/chatgpt-adapter(?<segment>/?.*), $\{segment}
+
+        - id: yookassa_adapter_route
+          uri: http://be-java-platform-yookassa-adapter:9798
+          predicates:
+            Path=/yookassa-adapter/**
+          filters:
+            - RewritePath=/yookassa-adapter(?<segment>/?.*), $\{segment}
+
+        - id: jira_adapter_route
+          uri: http://be-java-platform-jira-adapter:9698
+          predicates:
+            Path=/jira-adapter/**
+          filters:
+            - RewritePath=/jira-adapter(?<segment>/?.*), $\{segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 9090
+
+logging:
+  level:
+    root: INFO
